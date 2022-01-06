@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 @Slf4j
 @ThreadSafe
@@ -14,6 +15,7 @@ public class ProcessorManager {
 
     private static volatile boolean active;
     private static ExecutorService pool;
+    private static final ThreadFactory THREAD_FACTORY = (r) -> new Thread(r, "processor");
 
     public static synchronized boolean start(ChannelsHolder channelsHolder, Config config) {
         if (channelsHolder == null) throw new IllegalArgumentException("Channels holder must not be null!");
@@ -23,7 +25,7 @@ public class ProcessorManager {
             return false;
         }
 
-        pool = Executors.newFixedThreadPool(config.getProcessorsPoolSize());
+        pool = Executors.newFixedThreadPool(config.getProcessorsPoolSize(), THREAD_FACTORY);
         for (int i = 0; i < config.getProcessorsPoolSize(); i++) {
             pool.execute(new Processor(channelsHolder));
         }

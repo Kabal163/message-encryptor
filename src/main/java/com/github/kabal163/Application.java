@@ -21,7 +21,7 @@ public class Application {
     private static final int CONSUMERS_NUMBER = 7;
     private static final int PRODUCERS_NUMBER = 2;
     private static final int MIN_PRIORITY = 1;
-    private static final int MAX_PRIORITY = Integer.MAX_VALUE;
+    private static final int MAX_PRIORITY = 10;
 
     public static void main(String[] args) {
         Config config = new Config();
@@ -47,7 +47,7 @@ public class Application {
                 while (true) {
                     encryptionService.produce(
                             Request.builder()
-                                    .priority(random.nextInt(MAX_PRIORITY - MIN_PRIORITY) + MIN_PRIORITY)
+                                    .priority(random.nextInt(MAX_PRIORITY) + MIN_PRIORITY)
                                     .payload(UUID.randomUUID())
                                     .build());
                 }
