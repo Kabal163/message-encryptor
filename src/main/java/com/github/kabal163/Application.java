@@ -1,9 +1,9 @@
 package com.github.kabal163;
 
-import com.github.kabal163.core.channel.ChannelsHolder;
-import com.github.kabal163.core.channel.ChannelsHolderImpl;
 import com.github.kabal163.config.Config;
 import com.github.kabal163.core.ProcessorManager;
+import com.github.kabal163.core.channel.ChannelsHolder;
+import com.github.kabal163.core.channel.ChannelsHolderImpl;
 import com.github.kabal163.service.EncryptionService;
 import com.github.kabal163.service.EncryptionServiceImpl;
 import com.github.kabal163.service.Request;
@@ -20,6 +20,8 @@ public class Application {
 
     private static final int CONSUMERS_NUMBER = 7;
     private static final int PRODUCERS_NUMBER = 2;
+    private static final int MIN_PRIORITY = 1;
+    private static final int MAX_PRIORITY = Integer.MAX_VALUE;
 
     public static void main(String[] args) {
         Config config = new Config();
@@ -34,7 +36,7 @@ public class Application {
     }
 
     private static void initProcessors(ChannelsHolder channelsHolder, Config config) {
-        ProcessorManager.process(channelsHolder, config);
+        ProcessorManager.start(channelsHolder, config);
     }
 
     private static void initProducers(EncryptionService encryptionService) {
@@ -45,7 +47,7 @@ public class Application {
                 while (true) {
                     encryptionService.produce(
                             Request.builder()
-                                    .priority(random.nextInt(10))
+                                    .priority(random.nextInt(MAX_PRIORITY - MIN_PRIORITY) + MIN_PRIORITY)
                                     .payload(UUID.randomUUID())
                                     .build());
                 }
@@ -58,12 +60,7 @@ public class Application {
         for (int i = 0; i < CONSUMERS_NUMBER; i++) {
             pool.execute(() -> {
                 while (true) {
-                    Response response = null;
-                    try {
-                        response = encryptionService.consume();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    Response response = encryptionService.consume();
                     log.info("Read a response: {}", response);
                 }
             });

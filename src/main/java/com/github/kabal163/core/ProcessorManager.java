@@ -15,7 +15,7 @@ public class ProcessorManager {
     private static volatile boolean active;
     private static ExecutorService pool;
 
-    public static synchronized boolean process(ChannelsHolder channelsHolder, Config config) {
+    public static synchronized boolean start(ChannelsHolder channelsHolder, Config config) {
         if (channelsHolder == null) throw new IllegalArgumentException("Channels holder must not be null!");
         if (config == null) throw new IllegalArgumentException("config holder must not be null!");
 

@@ -1,5 +1,6 @@
 package com.github.kabal163.core.channel;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.concurrent.BlockingQueue;
@@ -30,6 +31,7 @@ public class ChannelImpl<T> implements Channel<T> {
     }
 
     @Override
+    @Nullable
     public T pollItem() {
         return this.queue.poll();
     }
