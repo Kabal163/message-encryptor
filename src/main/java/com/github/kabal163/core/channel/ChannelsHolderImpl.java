@@ -24,6 +24,8 @@ public class ChannelsHolderImpl implements ChannelsHolder {
 
     @Override
     public void addRequest(Request request) {
+        if (request == null) throw new IllegalArgumentException("request must not be null!");
+
         requestChannels.compute(
                 request.getPriority(),
                 (p, channel) -> {
@@ -39,6 +41,8 @@ public class ChannelsHolderImpl implements ChannelsHolder {
 
     @Override
     public void putResponse(Response response) throws InterruptedException {
+        if (response == null) throw new IllegalArgumentException("response must not be null!");
+
         responseChannel.putItem(response);
     }
 
@@ -49,6 +53,8 @@ public class ChannelsHolderImpl implements ChannelsHolder {
 
     @Override
     public boolean removeChannel(PriorityChannel<Request> channel) {
+        if (channel == null) throw new IllegalArgumentException("channel must not be null!");
+
         return requestChannels.remove(channel.getPriority(), channel);
     }
 

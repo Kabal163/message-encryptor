@@ -18,13 +18,13 @@ import java.util.concurrent.Executors;
 @Slf4j
 public class Application {
 
-    private static final int CONSUMERS_NUMBER = 10;
-    private static final int PRODUCERS_NUMBER = 3;
+    private static final int CONSUMERS_NUMBER = 7;
+    private static final int PRODUCERS_NUMBER = 2;
 
     public static void main(String[] args) {
         Config config = new Config();
         config.setProcessorsPoolSize(10);
-        config.setResponseChannelPoolSize(1000);
+        config.setResponseChannelPoolSize(100000);
         ChannelsHolder channelsHolder = new ChannelsHolderImpl(config);
         EncryptionService encryptionService = new EncryptionServiceImpl(channelsHolder);
 

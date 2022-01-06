@@ -1,6 +1,7 @@
 package com.github.kabal163.service;
 
 import com.github.kabal163.core.channel.ChannelsHolder;
+import com.github.kabal163.exception.ResponseConsumingException;
 
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -21,7 +22,11 @@ public class EncryptionServiceImpl implements EncryptionService {
     }
 
     @Override
-    public Response consume() throws InterruptedException {
-        return channelsHolder.getResponse();
+    public Response consume() {
+        try {
+            return channelsHolder.getResponse();
+        } catch (InterruptedException e) {
+            throw new ResponseConsumingException("Error while consuming a response!", e);
+        }
     }
 }
