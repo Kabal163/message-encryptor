@@ -18,7 +18,7 @@ public interface ChannelsHolder {
     /**
      * Adds a {@code request} to a request channel with the appropriate
      * priority. If there is no such channel the new one will be
-     * created.
+     * created. Operation is not blocking.
      *
      * @param request contains payload to be encrypted
      * @throws IllegalArgumentException if the {@code request} is null

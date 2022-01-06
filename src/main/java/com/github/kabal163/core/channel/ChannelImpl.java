@@ -1,9 +1,11 @@
 package com.github.kabal163.core.channel;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.concurrent.BlockingQueue;
 
 @ThreadSafe
+@ParametersAreNonnullByDefault
 public class ChannelImpl<T> implements Channel<T> {
 
     protected final BlockingQueue<T> queue;
