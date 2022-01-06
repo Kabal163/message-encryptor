@@ -8,6 +8,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.Iterator;
+import java.util.concurrent.LinkedBlockingQueue;
 
 class Processor implements Runnable {
 
@@ -33,7 +34,10 @@ class Processor implements Runnable {
             Request request = channel.pollItem();
 
             if (request == null) {
-                channelsHolder.removeChannel(channel);
+                channelsHolder.removeChannel(
+                        new PriorityChannelImpl<>(
+                                channel.getPriority(),
+                                new LinkedBlockingQueue<>()));
                 break;
             }
 
