@@ -20,6 +20,7 @@ public class Request {
         return new RequestBuilder() {
             @Override
             public Request build() {
+                if (super.priority < 1) throw new IllegalArgumentException("priority must not be less then 1");
                 if (super.payload == null) throw new IllegalArgumentException("payload must not be null!");
                 return super.build();
             }
