@@ -1,7 +1,7 @@
 package com.github.kabal163;
 
-import com.github.kabal163.channel.ChannelsHolder;
-import com.github.kabal163.channel.ChannelsHolderImpl;
+import com.github.kabal163.core.channel.ChannelsHolder;
+import com.github.kabal163.core.channel.ChannelsHolderImpl;
 import com.github.kabal163.config.Config;
 import com.github.kabal163.core.ProcessorManager;
 import com.github.kabal163.service.EncryptionService;
@@ -14,7 +14,6 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class Application {
@@ -40,14 +39,13 @@ public class Application {
 
     private static void initProducers(EncryptionService encryptionService) {
         ExecutorService pool = Executors.newCachedThreadPool();
-        final AtomicInteger count = new AtomicInteger(0);
+        Random random = new Random();
         for (int i = 0; i < PRODUCERS_NUMBER; i++) {
-            count.incrementAndGet();
             pool.execute(() -> {
                 while (true) {
                     encryptionService.produce(
                             Request.builder()
-                                    .priority(count.get())
+                                    .priority(random.nextInt(10))
                                     .payload(UUID.randomUUID())
                                     .build());
                 }

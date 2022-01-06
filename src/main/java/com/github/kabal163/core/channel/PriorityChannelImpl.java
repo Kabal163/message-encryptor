@@ -1,4 +1,4 @@
-package com.github.kabal163.channel;
+package com.github.kabal163.core.channel;
 
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;

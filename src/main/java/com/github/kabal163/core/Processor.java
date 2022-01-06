@@ -1,7 +1,8 @@
 package com.github.kabal163.core;
 
-import com.github.kabal163.channel.ChannelsHolder;
-import com.github.kabal163.channel.PriorityChannel;
+import com.github.kabal163.core.channel.ChannelsHolder;
+import com.github.kabal163.core.channel.PriorityChannel;
+import com.github.kabal163.core.channel.PriorityChannelImpl;
 import com.github.kabal163.service.Request;
 import com.github.kabal163.service.Response;
 import lombok.SneakyThrows;

@@ -1,4 +1,4 @@
-package com.github.kabal163.channel;
+package com.github.kabal163.core.channel;
 
 import com.github.kabal163.service.Request;
 import com.github.kabal163.service.Response;

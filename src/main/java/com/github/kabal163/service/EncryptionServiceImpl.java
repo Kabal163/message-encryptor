@@ -1,6 +1,6 @@
 package com.github.kabal163.service;
 
-import com.github.kabal163.channel.ChannelsHolder;
+import com.github.kabal163.core.channel.ChannelsHolder;
 
 import javax.annotation.concurrent.ThreadSafe;
 

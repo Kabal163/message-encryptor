@@ -1,4 +1,4 @@
-package com.github.kabal163.channel;
+package com.github.kabal163.core.channel;
 
 public interface PriorityChannel<T> extends Channel<T> {
 

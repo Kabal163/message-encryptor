@@ -1,6 +1,6 @@
 package com.github.kabal163.core;
 
-import com.github.kabal163.channel.ChannelsHolder;
+import com.github.kabal163.core.channel.ChannelsHolder;
 import com.github.kabal163.config.Config;
 import lombok.extern.slf4j.Slf4j;
 
