@@ -19,7 +19,7 @@ public class ChannelsHolderImpl implements ChannelsHolder {
 
     public ChannelsHolderImpl(Config config) {
         this.requestChannels = new ConcurrentSkipListMap<>(Comparator.reverseOrder());
-        this.responseChannel = new ChannelImpl<>(new ArrayBlockingQueue<>(config.getResponseChannelPoolSize()));
+        this.responseChannel = new ChannelImpl<>(new ArrayBlockingQueue<>(config.getResponseChannelCapacity()));
     }
 
     @Override

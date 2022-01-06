@@ -14,7 +14,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 @Slf4j
 @RequiredArgsConstructor
-class Processor implements Runnable {
+public class Processor implements Runnable {
 
     private final ChannelsHolder channelsHolder;
 

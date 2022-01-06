@@ -15,7 +15,7 @@ public class ProcessorManager {
 
     private static volatile boolean active;
     private static ExecutorService pool;
-    private static final ThreadFactory THREAD_FACTORY = (r) -> new Thread(r, "processor");
+    private static final ThreadFactory THREAD_FACTORY = (r) -> new Thread(r, "processor-thread");
 
     public static synchronized boolean start(ChannelsHolder channelsHolder, Config config) {
         if (channelsHolder == null) throw new IllegalArgumentException("Channels holder must not be null!");

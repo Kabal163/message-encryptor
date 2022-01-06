@@ -26,7 +26,7 @@ public class Application {
     public static void main(String[] args) {
         Config config = new Config();
         config.setProcessorsPoolSize(10);
-        config.setResponseChannelPoolSize(100000);
+        config.setResponseChannelCapacity(100000);
         ChannelsHolder channelsHolder = new ChannelsHolderImpl(config);
         EncryptionService encryptionService = new EncryptionServiceImpl(channelsHolder);
 
@@ -40,7 +40,7 @@ public class Application {
     }
 
     private static void initProducers(EncryptionService encryptionService) {
-        ExecutorService pool = Executors.newCachedThreadPool();
+        ExecutorService pool = Executors.newCachedThreadPool((r) -> new Thread(r, "producer-thread"));
         Random random = new Random();
         for (int i = 0; i < PRODUCERS_NUMBER; i++) {
             pool.execute(() -> {
@@ -56,7 +56,7 @@ public class Application {
     }
 
     private static void initConsumers(EncryptionService encryptionService) {
-        ExecutorService pool = Executors.newFixedThreadPool(CONSUMERS_NUMBER);
+        ExecutorService pool = Executors.newCachedThreadPool((r) -> new Thread(r, "consumer-thread"));
         for (int i = 0; i < CONSUMERS_NUMBER; i++) {
             pool.execute(() -> {
                 while (true) {
