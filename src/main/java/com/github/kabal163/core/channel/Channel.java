@@ -1,7 +1,6 @@
 package com.github.kabal163.core.channel;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Represents a channel of items.
@@ -10,7 +9,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @param <T> item's type
  * @see ChannelsHolder
  */
-@ParametersAreNonnullByDefault
 public interface Channel<T> {
 
     /**

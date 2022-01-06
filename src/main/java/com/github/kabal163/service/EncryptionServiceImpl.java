@@ -2,17 +2,15 @@ package com.github.kabal163.service;
 
 import com.github.kabal163.core.channel.ChannelsHolder;
 import com.github.kabal163.exception.ResponseConsumingException;
+import lombok.RequiredArgsConstructor;
 
 import javax.annotation.concurrent.ThreadSafe;
 
 @ThreadSafe
+@RequiredArgsConstructor
 public class EncryptionServiceImpl implements EncryptionService {
 
     private final ChannelsHolder channelsHolder;
-
-    public EncryptionServiceImpl(ChannelsHolder channelsHolder) {
-        this.channelsHolder = channelsHolder;
-    }
 
     @Override
     public void produce(Request request) {

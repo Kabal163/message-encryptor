@@ -1,19 +1,16 @@
 package com.github.kabal163.core.channel;
 
+import lombok.RequiredArgsConstructor;
+
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.concurrent.BlockingQueue;
 
 @ThreadSafe
-@ParametersAreNonnullByDefault
+@RequiredArgsConstructor
 public class ChannelImpl<T> implements Channel<T> {
 
     protected final BlockingQueue<T> queue;
-
-    public ChannelImpl(BlockingQueue<T> queue) {
-        this.queue = queue;
-    }
 
     @Override
     public void addItem(T item) {
