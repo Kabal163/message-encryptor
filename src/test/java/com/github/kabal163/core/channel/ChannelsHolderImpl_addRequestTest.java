@@ -18,6 +18,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -61,11 +62,16 @@ class ChannelsHolderImpl_addRequestTest {
             "When call addRequest 1 million times for each producer " +
             "Then the total requests number in request channels must be 10 millions")
     void givenTenProducers_whenCallAddRequestMillionTimesEach_thenTotalNumberOfRequestsInRequestChannelsMustBeTenMillions() throws InterruptedException {
-        final int producersNumber = 10;
+        final int numberOfProducers = 10;
         final int numberOfCalls = 1_000_000;
-        final int expected = producersNumber * numberOfCalls;
+        final int expected = numberOfProducers * numberOfCalls;
+        final Random random = new Random();
 
-        runInParallel(producersNumber, numberOfCalls).await();
+        runInParallel(
+                numberOfProducers,
+                numberOfCalls,
+                i -> random.nextInt(TEST_MAX_PRIORITY) + TEST_MIN_PRIORITY
+        ).await();
 
         int actual = 0;
         Iterator<PriorityChannel<Request>> iter = underTest.getRequestChannelsIterator();
@@ -85,16 +91,18 @@ class ChannelsHolderImpl_addRequestTest {
     @DisplayName("Given a single priority for all requests " +
             "When call addRequest multiple times " +
             "Then all the requests will be added to the same request channel")
-    void givenSinglePriority_whenCallAddRequestMultipleTimes_thenAllRequestsWillBeAddedToTheSameRequestChannel(int priority) {
+    void givenSinglePriority_whenCallAddRequestMultipleTimes_thenAllRequestsWillBeAddedToTheSameRequestChannel(int priority) throws InterruptedException {
         final int expectedNumberOfChannels = 1;
-        final int expectedNumberOfRequests = 100_000;
+        final int numberOfProducers = 10;
+        final int numberOfCalls = 10_000;
+        final int expectedNumberOfRequests = numberOfProducers * numberOfCalls;
 
-        for (int i = 0; i < expectedNumberOfRequests; i++) {
-            underTest.addRequest(Request.builder()
-                    .priority(priority)
-                    .payload(UUID.randomUUID())
-                    .build());
-        }
+
+        runInParallel(
+                numberOfProducers,
+                numberOfCalls,
+                i -> priority
+        ).await();
 
         int actualNumberOfChannels = 0;
         int actualNumberOfRequests = 0;
@@ -116,18 +124,15 @@ class ChannelsHolderImpl_addRequestTest {
     @DisplayName("Given some number of priorities " +
             "When call addRequest multiple times " +
             "Then a new channel must be created per priority")
-    void givenSomeNumberOfPriorities_whenCallAddRequestMultipleTimes_thenNewChannelMustBeCreatedPerPriority() {
+    void givenSomeNumberOfPriorities_whenCallAddRequestMultipleTimes_thenNewChannelMustBeCreatedPerPriority() throws InterruptedException {
         final int expectedNumberOfChannels = 300_000;
-        final int numberOfCalls = 2;
+        final int numberOfProducers = 10;
 
-        for (int i = 1; i <= expectedNumberOfChannels; i++) {
-            for (int j = 0; j < numberOfCalls; j++) {
-                underTest.addRequest(Request.builder()
-                        .priority(i)
-                        .payload(UUID.randomUUID())
-                        .build());
-            }
-        }
+        runInParallel(
+                numberOfProducers,
+                expectedNumberOfChannels,
+                i -> i + 1
+        ).await();
 
         int actualNumberOfChannels = 0;
         Iterator<PriorityChannel<Request>> iter = underTest.getRequestChannelsIterator();
@@ -139,11 +144,13 @@ class ChannelsHolderImpl_addRequestTest {
         assertThat(actualNumberOfChannels).isEqualTo(expectedNumberOfChannels);
     }
 
-    private CountDownLatch runInParallel(int numberOfThreads, int numberOfCalls) {
+    private CountDownLatch runInParallel(int numberOfThreads,
+                                         int numberOfCalls,
+                                         Function<Integer, Integer> priorityProducer) {
         final ExecutorService pool = Executors.newFixedThreadPool(numberOfThreads);
         final CyclicBarrier barrier = new CyclicBarrier(numberOfThreads);
         final CountDownLatch latch = new CountDownLatch(numberOfThreads);
-        final Random random = new Random();
+
 
         for (int i = 0; i < numberOfThreads; i++) {
             pool.execute(() -> {
@@ -151,7 +158,7 @@ class ChannelsHolderImpl_addRequestTest {
                     barrier.await();
                     for (int j = 0; j < numberOfCalls; j++) {
                         underTest.addRequest(Request.builder()
-                                .priority(random.nextInt(TEST_MAX_PRIORITY) + TEST_MIN_PRIORITY)
+                                .priority(priorityProducer.apply(j))
                                 .payload(UUID.randomUUID())
                                 .build());
                     }
